@@ -1,1 +1,25 @@
-# web6403-gladkov_sv
+
+# Repository for labs (Web programming)
+
+---
+
+**ФИО:** Гладков Сергей Владимирович
+
+**Группа:** 6403-010302D
+
+**Научный руководитель:** Парингер Рустам Александрович
+
+**Тема диплома:** «Исследование влияния методов генерации токенов в задачах генерации кода большими языковыми моделями»
+
+**Цитата главного нетакусика:**
+
+>
+> Napoleon Bonaparte™:
+>«History is a set of lies agreed upon»
+>
+
+---
+
+**Here is Maxwell!**
+
+![Maxwell](https://i.pinimg.com/originals/fd/ab/39/fdab39792a30b0947b072fc97f24c24c.gif)
