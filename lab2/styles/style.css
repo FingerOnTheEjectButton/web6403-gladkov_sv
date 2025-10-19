@@ -1,0 +1,99 @@
+/* ====== стили сайта "Лягушки" ======*/
+:root{
+  --green:#2e7d32;
+  --green-2:#43a047;
+  --accent:#8bc34a;
+  --ink:#1b1b1b;
+  --paper:#f7faf7;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  color:var(--ink);
+  background:var(--paper);
+  font:16px/1.6 system-ui;
+}
+
+a{color:var(--green-2); text-decoration:none; border-bottom:1px solid currentColor}
+a:hover{color:var(--green); border-bottom-color:transparent}
+a:focus{outline:2px dashed var(--accent); outline-offset:2px}
+
+/* atrb selector */
+a[href^="http"]::after{content:"↗"; font-size:.9em; margin-left:.25em}
+
+/* header */
+header.site-header{
+  position:sticky; top:0; z-index:10;
+  background:white; border-bottom:1px solid var(--border);
+}
+
+.container{max-width:1000px; margin:0 auto; padding:0 16px}
+
+.topbar{
+  display:flex; align-items:center; gap:16px; justify-content:space-between;
+  padding:14px 0;
+}
+
+#logo{
+  font-weight:800; font-size:20px; letter-spacing:.5px;
+  color:white; background:var(--green);
+  padding:8px 12px; border-radius:12px;
+  display:inline-block;
+}
+
+nav a{display:inline-block; padding:8px 10px; margin-left:6px; border-bottom:none}
+nav a:hover{background:var(--paper); border-radius:10px}
+nav a.active{background:var(--accent); color:#08340d; border-radius:10px}
+
+/* frog-main */
+.frog-main{
+  padding:48px 0 24px;
+  display:grid; grid-template-columns:1.2fr .8fr; gap:24px; align-items:center;
+}
+.frog-main h1{margin:.2em 0 .4em 0; font-size:40px; line-height:1.1}
+.frog-main p.lead{font-size:18px; color:var(--muted)}
+
+.card{
+  background:white; border:1px solid var(--border); border-radius:16px; padding:16px;
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+
+img{max-width:100%; height:auto; vertical-align:middle; border-radius:12px}
+
+/* table */
+table{width:100%; border-collapse:collapse; background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden}
+thead th{background:var(--green); color:white; text-align:center; padding:10px}
+tbody td, tbody th{padding:10px; border-top:1px solid var(--border)}
+tbody tr:nth-child(even){background:#fbfdfb}
+tbody tr:hover{background:#f1f8ee}
+
+/* table align */
+.align-left{text-align:left}
+.align-right{text-align:right}
+.align-center{text-align:center}
+
+/* badges */
+.tag{display:inline-block; padding:2px 8px; border-radius:999px; background:#e9f7e7; color:#0f3c1c; font-size:12px; border:1px solid var(--accent)}
+
+/* footer */
+footer.site-footer{margin-top:32px; padding:24px 0; color:var(--muted)}
+
+/* content */
+main{padding:24px 0 40px}
+h2{margin-top:1.5em}
+.section{margin-top:24px}
+.grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:4px}
+
+/* extra */
+hr{border:none; height:1px; background:var(--border); margin:20px 0}
+
+/* adapt */
+@media (max-width: 760px){
+  .frog-main{grid-template-columns:1fr}
+  nav{display:flex; flex-wrap:wrap; gap:6px}
+}
