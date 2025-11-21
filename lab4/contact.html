@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Форма наблюдений — Лягушки</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script src="scripts/main.js" defer></script>
+  <meta name="description" content="Страница с формой для отправки наблюдений о лягушках.">
+</head>
+<body class="page">
+<header class="site-header page__header">
+  <div class="container topbar">
+    <a href="index.html" id="logo">Лягушки</a>
+    <nav class="site-nav">
+      <a href="index.html">Главная</a>
+      <a href="species.html">Виды</a>
+      <a href="habitats.html">Среда обитания</a>
+      <a href="gallery.html">Галерея</a>
+      <a href="contact.html" class="active">Форма</a>
+    </nav>
+  </div>
+</header>
+<main class="container page__main">
+
+  <h1 class="page-title">Поделитесь наблюдениями о лягушках</h1>
+  <p class="page-lead">Расскажите, каких лягушек вы встречали, где они обитают и что вас в них удивляет. Это учебная форма — данные отправляются в консоль браузера.</p>
+
+  <section class="form-page">
+    <div class="form-page__info">
+      <h2>Что можно отправить</h2>
+      <p>Например:</p>
+      <ul class="form-page__list">
+        <li>наблюдения во дворе, в парке или у пруда;</li>
+        <li>интересные повадки и звуки;</li>
+        <li>замеченные изменения в природе (погода, количество лягушек и т.п.).</li>
+      </ul>
+    </div>
+
+    <div class="form-page__form">
+      <form class="frog-form" id="frog-observation-form">
+        <div class="frog-form__field">
+          <label class="frog-form__label" for="name">Ваше имя</label>
+          <input class="frog-form__input" type="text" id="name" name="name" required>
+        </div>
+
+        <div class="frog-form__field">
+          <label class="frog-form__label" for="email">E-mail</label>
+          <input class="frog-form__input" type="email" id="email" name="email" placeholder="name@example.com" required>
+        </div>
+
+        <div class="frog-form__field frog-form__field--inline">
+          <div class="frog-form__field-half">
+            <label class="frog-form__label" for="species">Любимый вид лягушек</label>
+            <select class="frog-form__input" id="species" name="species">
+              <option value="Лягушка обыкновенная">Лягушка обыкновенная</option>
+              <option value="Квакша обыкновенная">Квакша обыкновенная</option>
+              <option value="Жерлянка краснобрюхая">Жерлянка краснобрюхая</option>
+              <option value="Лягушка-бык">Лягушка-бык</option>
+              <option value="Другая">Другая</option>
+            </select>
+          </div>
+          <div class="frog-form__field-half">
+            <label class="frog-form__label" for="experience">Опыт наблюдений</label>
+            <select class="frog-form__input" id="experience" name="experience">
+              <option value="Новичок">Новичок</option>
+              <option value="Наблюдаю время от времени">Наблюдаю время от времени</option>
+              <option value="Опытный наблюдатель">Опытный наблюдатель</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="frog-form__field">
+          <span class="frog-form__label frog-form__label--block">Как вы относитесь к лягушкам?</span>
+          <label class="frog-form__option">
+            <input type="radio" name="attitude" value="Обожаю" checked>
+            <span>Обожаю</span>
+          </label>
+          <label class="frog-form__option">
+            <input type="radio" name="attitude" value="Нравятся">
+            <span>Нравятся, но без фанатизма</span>
+          </label>
+          <label class="frog-form__option">
+            <input type="radio" name="attitude" value="Боюсь">
+            <span>Боюсь, но готов(а) изучать</span>
+          </label>
+        </div>
+
+        <div class="frog-form__field">
+          <label class="frog-form__label" for="message">Сообщение</label>
+          <textarea class="frog-form__input" id="message" name="message" rows="4" placeholder="Опишите своё наблюдение или задайте вопрос."></textarea>
+        </div>
+
+        <div class="frog-form__field frog-form__field--compact">
+          <label class="frog-form__option">
+            <input type="checkbox" id="agree" name="agree" required>
+            <span>Согласен(на) на обработку введённых данных в учебных целях</span>
+          </label>
+        </div>
+
+        <div class="frog-form__actions">
+          <button class="button button--primary" type="submit">Отправить данные</button>
+          <button class="button button--ghost" type="reset">Сбросить</button>
+        </div>
+
+        <p class="frog-form__status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+<footer class="site-footer page__footer">
+  <div class="container">
+    Источник базовой информации: <a href="https://ru.wikipedia.org/wiki/%D0%9B%D1%8F%D0%B3%D1%83%D1%88%D0%BA%D0%B8" target="_blank" rel="noopener">Википедия</a>.
+  </div>
+</footer>
+</body>
+</html>
