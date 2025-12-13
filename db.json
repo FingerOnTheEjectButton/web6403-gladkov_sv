@@ -1,0 +1,37 @@
+{
+  "frogs": [
+    {
+      "name": "Лягушка обыкновенная",
+      "latinName": "Rana temporaria",
+      "size": "6–9",
+      "habitat": "Леса, луга, водоёмы",
+      "area": "Европа, Азия",
+      "status": "LC"
+    },
+    {
+      "name": "Квакша обыкновенная",
+      "latinName": "Hyla arborea",
+      "size": "3–5",
+      "habitat": "Кустарники, деревья",
+      "area": "Европа",
+      "status": "LC"
+    },
+    {
+      "name": "Жерлянка краснобрюхая",
+      "latinName": "Bombina bombina",
+      "size": "4–5",
+      "habitat": "Болота и пруды",
+      "area": "Европа",
+      "status": "LC"
+    },
+    {
+      "name": "Древолаз ужасный",
+      "latinName": "Phyllobates terribilis",
+      "size": "4–5",
+      "habitat": "Тропические леса",
+      "area": "Колумбия",
+      "status": "EN"
+    }
+  ],
+  "observations": []
+}

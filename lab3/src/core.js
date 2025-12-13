@@ -136,16 +136,13 @@ function sequence(start = 0, step = 1) {
  * deepEqual({arr: [22, 33], text: 'text'}, {arr: [22, 3], text: 'text2'}) // false
  */
 function deepEqual(firstObject, secondObject) {
-    // Быстрая проверка идентичности, учитывает NaN === NaN через Object.is
     if (Object.is(firstObject, secondObject)) return true;
-
-    // Если типы различаются или одно из значений не-объект
+    // Проверяем идентичность объектов
     const isObj1 = typeof firstObject === 'object' && firstObject !== null;
     const isObj2 = typeof secondObject === 'object' && secondObject !== null;
 
     if (!isObj1 || !isObj2) return false;
-
-    // Массивы должны быть массивами
+    // Проверяем массивы
     const arr1 = Array.isArray(firstObject);
     const arr2 = Array.isArray(secondObject);
     if (arr1 !== arr2) return false;

@@ -9,6 +9,8 @@
   --color-nav-active-text:#08340d;
   --color-accent-rgb:139,195,74;
   --shadow-rgb:0,0,0;
+  --color-bc1: #ef4444;
+  --color-bc2: #dc2626;
 
   /* legacy */
   --link:var(--color-link);
@@ -404,6 +406,33 @@ hr{
   opacity:1;
   transform:translateY(0);
   color:var(--color-link);
+}
+
+.frog-form__field--invalid .frog-form__input,
+.frog-form__field--invalid .frog-form select,
+.frog-form__field--invalid .frog-form textarea {
+  border-color: var(--color-bc1);
+}
+
+.frog-form__field--invalid .frog-form__input:focus,
+.frog-form__field--invalid .frog-form select:focus,
+.frog-form__field--invalid .frog-form textarea:focus {
+  border-color:var(--color-bc2);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+}
+
+.frog-form__hint {
+  font-size: 13px;
+  color: var(--color-bc2);
+  margin-top: -4px;
+}
+
+.frog-form__status--error {
+  color: var(--color-bc2) !important;
+}
+
+.frog-form__field--invalid .frog-form__option span {
+  color: var(--color-bc2);
 }
 
 /* buttons */
