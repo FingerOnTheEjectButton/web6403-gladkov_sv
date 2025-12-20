@@ -1,37 +1,69 @@
 {
-  "frogs": [
-    {
-      "name": "Лягушка обыкновенная",
-      "latinName": "Rana temporaria",
-      "size": "6–9",
-      "habitat": "Леса, луга, водоёмы",
-      "area": "Европа, Азия",
-      "status": "LC"
+  "/frogs": {
+    "get": [
+      {
+        "name": "Лягушка обыкновенная",
+        "latinName": "Rana temporaria",
+        "size": "6–9",
+        "habitat": "Леса, луга, водоёмы",
+        "area": "Европа, Азия",
+        "status": "LC"
+      },
+      {
+        "name": "Квакша обыкновенная",
+        "latinName": "Hyla arborea",
+        "size": "3–5",
+        "habitat": "Кустарники, деревья",
+        "area": "Европа",
+        "status": "LC"
+      },
+      {
+        "name": "Жерлянка краснобрюхая",
+        "latinName": "Bombina bombina",
+        "size": "4–5",
+        "habitat": "Болота и пруды",
+        "area": "Европа",
+        "status": "LC"
+      },
+      {
+        "name": "Древолаз ужасный",
+        "latinName": "Phyllobates terribilis",
+        "size": "4–5",
+        "habitat": "Тропические леса",
+        "area": "Колумбия",
+        "status": "EN"
+      },
+            {
+        "name": "Фиолетовая лягушка",
+        "latinName": "Nasikabatrachus sahyadrensis",
+        "size": "7–9",
+        "habitat": "Каменистые бассейны",
+        "area": "Западные Гаты Индии",
+        "status": "EN"
+      },
+            {
+        "name": "Лягушка-Голиаф",
+        "latinName": "Conraua goliath",
+        "size": "32–45",
+        "habitat": "Тропические леса",
+        "area": "Центральная Африка",
+        "status": "EN"
+      },
+            {
+        "name": "Капский узкорот",
+        "latinName": "Breviceps gibbosus",
+        "size": "2–7",
+        "habitat": "Норы",
+        "area": "Южная Африка",
+        "status": "NT"
+      }
+    ]
+  },
+  "/observations": {
+    "post": {
+      "success": true,
+      "message": "Наблюдение успешно отправлено"
     },
-    {
-      "name": "Квакша обыкновенная",
-      "latinName": "Hyla arborea",
-      "size": "3–5",
-      "habitat": "Кустарники, деревья",
-      "area": "Европа",
-      "status": "LC"
-    },
-    {
-      "name": "Жерлянка краснобрюхая",
-      "latinName": "Bombina bombina",
-      "size": "4–5",
-      "habitat": "Болота и пруды",
-      "area": "Европа",
-      "status": "LC"
-    },
-    {
-      "name": "Древолаз ужасный",
-      "latinName": "Phyllobates terribilis",
-      "size": "4–5",
-      "habitat": "Тропические леса",
-      "area": "Колумбия",
-      "status": "EN"
-    }
-  ],
-  "observations": []
+    "get": []
+  }
 }

@@ -13,10 +13,6 @@ class FrogObservationFormData {
     this.date = new Date().toISOString(); 
   }
 
-  format() {
-    return `Наблюдение от ${this.name} (${this.email}): Вид - ${this.species}`;
-  }
-
   logToConsole() {
     console.group("Данные формы");
     console.log(this);
@@ -25,13 +21,20 @@ class FrogObservationFormData {
 }
 
 function validateField(inputElement, validationFunction, errorMessage) {
+  if (!inputElement) return false;
+
   const formField = inputElement.closest(".frog-form__field");
-  if (!formField) return;
+  if (!formField) return false;
 
   const hintId = `${inputElement.id}-hint`;
   let hintNode = formField.querySelector(`#${hintId}`);
 
-  if (validationFunction(inputElement.value)) {
+  const valueForValidation =
+    inputElement.type === "checkbox" ? inputElement.checked : inputElement.value;
+
+  const isValid = validationFunction(valueForValidation);
+
+  if (isValid) {
     formField.classList.remove("frog-form__field--invalid");
     if (hintNode) hintNode.remove();
     inputElement.setCustomValidity("");
@@ -52,40 +55,40 @@ function validateField(inputElement, validationFunction, errorMessage) {
   }
 }
 
-const isNameValid = (name) => name.trim().length >= 2;
+const isNameValid = (name) => name.trim().length >= 4;
 const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isAgreeValid = (checked) => checked === true;
 
 function initDynamicValidation(form) {
   const nameInput = form.querySelector("#name");
   const emailInput = form.querySelector("#email");
+  const agreeInput = form.querySelector("#agree");
 
   if (nameInput) {
     nameInput.addEventListener("input", () => {
-      validateField(nameInput, isNameValid, "Имя должно содержать не менее 2 символов");
+      validateField(nameInput, isNameValid, "Имя должно содержать не менее 4 символов");
     });
   }
+
   if (emailInput) {
     emailInput.addEventListener("input", () => {
       validateField(emailInput, isEmailValid, "Введите корректный E-mail");
     });
   }
+
+  if (agreeInput) {
+    agreeInput.addEventListener("change", () => {
+      validateField(agreeInput, isAgreeValid, "Необходимо согласие");
+    });
+  }
 }
 
 function validateForm(form) {
-  const isNameOk = validateField(form.querySelector("#name"), isNameValid, "Имя должно содержать не менее 2 символов");
+  const isNameOk = validateField(form.querySelector("#name"), isNameValid, "Имя должно содержать не менее 4 символов");
   const isEmailOk = validateField(form.querySelector("#email"), isEmailValid, "Введите корректный E-mail");
-  const isAgreeChecked = form.querySelector("#agree").checked;
+  const isAgreeOk = validateField(form.querySelector("#agree"), isAgreeValid, "Необходимо согласие");
 
-  const agreeField = form.querySelector("#agree").closest(".frog-form__field");
-  if (!isAgreeChecked) {
-      agreeField.classList.add("frog-form__field--invalid");
-      form.querySelector("#agree").setCustomValidity("Необходимо согласие");
-  } else {
-      agreeField.classList.remove("frog-form__field--invalid");
-      form.querySelector("#agree").setCustomValidity("");
-  }
-
-  return isNameOk && isEmailOk && isAgreeChecked;
+  return isNameOk && isEmailOk && isAgreeOk;
 }
 
 function initFrogForm() {
@@ -95,6 +98,20 @@ function initFrogForm() {
   initDynamicValidation(form);
   const statusNode = form.querySelector(".frog-form__status");
 
+  let statusTimerId = null;
+
+  function clearStatus(ms) {
+    if (!statusNode) return;
+
+    if (statusTimerId) clearTimeout(statusTimerId);
+
+    statusTimerId = setTimeout(() => {
+      statusNode.textContent = "";
+      statusNode.classList.remove("frog-form__status--visible", "frog-form__status--error");
+      statusTimerId = null;
+    }, ms);
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -102,6 +119,8 @@ function initFrogForm() {
         if (statusNode) {
             statusNode.textContent = 'Исправьте ошибки в форме';
             statusNode.classList.add("frog-form__status--visible", "frog-form__status--error");
+          
+          clearStatus(10000);
         }
         return; 
     }
@@ -110,6 +129,11 @@ function initFrogForm() {
         statusNode.textContent = 'Отправка данных...';
         statusNode.classList.add("frog-form__status--visible");
         statusNode.classList.remove("frog-form__status--error");
+
+      if (statusTimerId) {
+        clearTimeout(statusTimerId);
+        statusTimerId = null;
+      }
     }
 
     const formData = new FormData(form);
@@ -138,19 +162,23 @@ function initFrogForm() {
             throw new Error(`Ошибка HTTP: ${response.status}`);
         }
 
-        const result = await response.json();
+        await response.json();
         
         if (statusNode) {
             statusNode.textContent = 'Данные успешно сохранены';
             statusNode.classList.add("frog-form__status--visible");
             statusNode.classList.remove("frog-form__status--error");
+
+          clearStatus(10000);
         }
-        form.reset(); 
+        form.reset();
     } catch (error) {
         console.error("Ошибка при отправке:", error);
         if (statusNode) {
-            statusNode.textContent = `Ошибка сервера: ${error.message}. mock-server запущен?`;
+            statusNode.textContent = `Ошибка сервера: ${error.message}.`;
             statusNode.classList.add("frog-form__status--visible", "frog-form__status--error");
+          
+            clearStatus(15000);
         }
     }
   });
@@ -159,8 +187,6 @@ function initFrogForm() {
 async function fetchFrogData(targetSelector) {
     const tbody = document.querySelector(targetSelector);
     if (!tbody) return;
-
-    // tbody.style.opacity = '0.5'; 
 
     try {
         const response = await fetch(`${SERVER_URL}/frogs`);
@@ -178,9 +204,8 @@ async function fetchFrogData(targetSelector) {
             return;
         }
 
-        frogs.forEach((frog, index) => {
+        frogs.forEach((frog) => {
             const row = tbody.insertRow();
-            row.style.background = index % 2 !== 0 ? 'var(--color-back)' : '#fff'; 
 
             row.innerHTML = `
                 <td class="align-left"><strong>${frog.name}</strong> (<em>${frog.latinName}</em>)</td>
@@ -191,14 +216,15 @@ async function fetchFrogData(targetSelector) {
             `;
         });
         
-        // tbody.style.opacity = '1';
         console.log(`[${new Date().toLocaleTimeString()}] Данные таблицы обновлены.`);
 
     } catch (error) {
         console.error("Ошибка загрузки данных:", error);
-        tbody.innerHTML = `<tr><td colspan="5" class="align-center" style="color:red">
-            Ошибка подключения к серверу (${SERVER_URL}).<br>mock-server запущен?.
-        </td></tr>`;
+        tbody.innerHTML = `
+            <tr><td colspan="5" class="align-center" style="color:red">
+                Ошибка подключения к серверу (${SERVER_URL}).
+            </td></tr>
+        `;
     }
 }
 
