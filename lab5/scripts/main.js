@@ -147,8 +147,6 @@ function initFrogForm() {
       message: (formData.get("message") || "").toString().trim()
     });
 
-    data.logToConsole();
-
     try {
         const response = await fetch(`${SERVER_URL}/observations`, {
             method: "POST",
@@ -161,8 +159,6 @@ function initFrogForm() {
         if (!response.ok) {
             throw new Error(`Ошибка HTTP: ${response.status}`);
         }
-
-        await response.json();
         
         if (statusNode) {
             statusNode.textContent = 'Данные успешно сохранены';
@@ -184,61 +180,168 @@ function initFrogForm() {
   });
 }
 
-async function fetchFrogData(targetSelector) {
-    const tbody = document.querySelector(targetSelector);
-    if (!tbody) return;
+function setTableStatus(statusNode, text, { isError = false, showSpinner = false } = {}) {
+  if (!statusNode) return;
 
-    try {
-        const response = await fetch(`${SERVER_URL}/frogs`);
-        
-        if (!response.ok) {
-            throw new Error(`Ошибка подключения: ${response.status}`);
-        }
+  statusNode.classList.toggle("table-status--error", isError);
 
-        const frogs = await response.json();
-        
-        tbody.innerHTML = ''; 
+  statusNode.replaceChildren();
 
-        if (!Array.isArray(frogs) || frogs.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="align-center">Данные отсутствуют</td></tr>';
-            return;
-        }
+  if (showSpinner) {
+    const spinner = document.createElement("span");
+    spinner.className = "loader";
+    spinner.setAttribute("aria-hidden", "true");
+    statusNode.appendChild(spinner);
+  }
 
-        frogs.forEach((frog) => {
-            const row = tbody.insertRow();
-
-            row.innerHTML = `
-                <td class="align-left"><strong>${frog.name}</strong> (<em>${frog.latinName}</em>)</td>
-                <td class="align-right">${frog.size}</td>
-                <td class="align-left">${frog.habitat}</td>
-                <td class="align-left">${frog.area}</td>
-                <td class="align-center"><span class="tag">${frog.status}</span></td>
-            `;
-        });
-        
-        console.log(`[${new Date().toLocaleTimeString()}] Данные таблицы обновлены.`);
-
-    } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
-        tbody.innerHTML = `
-            <tr><td colspan="5" class="align-center" style="color:red">
-                Ошибка подключения к серверу (${SERVER_URL}).
-            </td></tr>
-        `;
-    }
+  statusNode.appendChild(document.createTextNode(text));
 }
 
-function initPeriodicDataFetch(targetSelector, intervalMs) {
-    if (document.querySelector(targetSelector)) {
-        fetchFrogData(targetSelector);
-        setInterval(() => {
-            fetchFrogData(targetSelector);
-        }, intervalMs);
+function makeMessageRow({ text, withSpinner = false, isError = false }) {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = 5;
+  td.className = "align-center";
+
+  if (isError) td.classList.add("table-error")
+
+  if (withSpinner) {
+    const spinner = document.createElement("span");
+    spinner.className = "loader";
+    spinner.setAttribute("aria-hidden", "true");
+    td.appendChild(spinner);
+  }
+
+  td.appendChild(document.createTextNode(text));
+  tr.appendChild(td);
+  return tr;
+}
+
+function makeFrogRow(frog) {
+  const tr = document.createElement("tr");
+
+  const td1 = document.createElement("td");
+  td1.className = "align-left";
+
+  const strong = document.createElement("strong");
+  strong.textContent = frog.name;
+
+  const em = document.createElement("em");
+  em.textContent = frog.latinName;
+
+  td1.appendChild(strong);
+  td1.appendChild(document.createTextNode(" ("));
+  td1.appendChild(em);
+  td1.appendChild(document.createTextNode(")"));
+
+  const td2 = document.createElement("td");
+  td2.className = "align-right";
+  td2.textContent = frog.size;
+
+  const td3 = document.createElement("td");
+  td3.className = "align-left";
+  td3.textContent = frog.habitat;
+
+  const td4 = document.createElement("td");
+  td4.className = "align-left";
+  td4.textContent = frog.area;
+
+  const td5 = document.createElement("td");
+  td5.className = "align-center";
+
+  const tag = document.createElement("span");
+  tag.className = "tag";
+  tag.textContent = frog.status;
+  td5.appendChild(tag);
+
+  tr.append(td1, td2, td3, td4, td5);
+  return tr;
+}
+
+async function fetchFrogData(targetSelector, { isInitial = false } = {}) {
+  const tbody = document.querySelector(targetSelector);
+  if (!tbody) return;
+
+  const statusNode = document.querySelector("#frog-table-status");
+
+  if (isInitial) {
+    tbody.replaceChildren(
+      makeMessageRow({ text: "Загрузка данных...", withSpinner: true })
+    );
+  } else {
+    setTableStatus(statusNode, "Обновление...", { showSpinner: true });
+  }
+
+  tbody.setAttribute("aria-busy", "true");
+
+  try {
+    const response = await fetch(`${SERVER_URL}/frogs`);
+    if (!response.ok) {
+      throw new Error(`Ошибка подключения: ${response.status}`);
     }
+
+    const frogs = await response.json();
+
+    if (!Array.isArray(frogs) || frogs.length === 0) {
+      tbody.replaceChildren(
+        makeMessageRow({ text: "Данные отсутствуют" })
+      );
+      setTableStatus(statusNode, "Данные отсутствуют");
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    for (const frog of frogs) {
+      fragment.appendChild(makeFrogRow(frog));
+    }
+    tbody.replaceChildren(fragment);
+
+    const t = new Date().toLocaleTimeString();
+    console.log(`[${t}] Данные таблицы обновлены.`);
+    setTableStatus(statusNode, `Обновлено в ${t}`);
+  } catch (error) {
+    console.error("Ошибка загрузки данных:", error);
+
+    if (isInitial) {
+      tbody.replaceChildren(
+        makeMessageRow({
+          text: `Ошибка подключения к серверу (${SERVER_URL}).`,
+          isError: true
+        })
+      );
+    }
+
+    setTableStatus(statusNode, `Ошибка обновления: ${error.message}`, { isError: true });
+  } finally {
+    tbody.setAttribute("aria-busy", "false");
+  }
+}
+
+
+
+function initPeriodicDataFetch(targetSelector, intervalMs) {
+  if (!document.querySelector(targetSelector)) return;
+
+  let isFirst = true;
+  let inFlight = false;
+
+  const tick = async () => {
+    if (inFlight) return;
+    inFlight = true;
+    try {
+      await fetchFrogData(targetSelector, { isInitial: isFirst });
+    } finally {
+      inFlight = false;
+      isFirst = false;
+    }
+  };
+
+  tick();
+  setInterval(tick, intervalMs);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initFrogForm();
   
-  initPeriodicDataFetch("#frog-data-tbody", 300000); 
+  initPeriodicDataFetch("#frog-data-tbody", 10000); 
 });

@@ -519,3 +519,32 @@ hr{
     box-shadow:0 12px 30px rgba(var(--color-accent-rgb),0.45);
   }
 }
+
+.table-status {
+  margin: 14px 0 8px;
+  font-size: 14px;
+  color: var(--color-muted);
+  min-height: 1.6em;
+}
+
+.table-status--error {
+  color: var(--color-bc2);
+}
+
+.table-error { color: var(--color-bc2); }
+
+.loader {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -2px;
+  margin-right: 8px;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
